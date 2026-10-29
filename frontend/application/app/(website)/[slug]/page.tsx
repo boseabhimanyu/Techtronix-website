@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import styles from "./editor-typography.module.css"; 
-import "../../../styles/page-custom-styles.css"
+import styles from "./editor-typography.module.css";
+import "../../../styles/page-custom-styles.css";
 import type { Metadata } from "next";
+
 type Page = {
   id: string;
   title: string;
@@ -27,8 +28,7 @@ export async function generateMetadata({
   const page = await getPage(slug);
 
   return {
-    // Just return the raw page title here...
-    title: page ? page.title : "Page Not Found",
+    title: page ? `${page.title} | Computer & IT Services` : "Page Not Found",
   };
 }
 
@@ -53,7 +53,7 @@ async function getPage(slug: string): Promise<Page | null> {
     },
   );
 
-  // 2. Page doesn't exist
+    // 2. Page doesn't exist
   if (response.status === 404) {
     return null;
   }
@@ -63,7 +63,7 @@ async function getPage(slug: string): Promise<Page | null> {
     redirect(`/login?callbackUrl=/${encodeURIComponent(slug)}`);
   }
 
-  // 4. Any unexpected 500 error
+    // 4. Any unexpected 500 error
   if (!response.ok) {
     throw new Error("Unable to load page.");
   }
@@ -73,7 +73,11 @@ async function getPage(slug: string): Promise<Page | null> {
 }
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleString();
+  return new Date(value).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export default async function Page({
@@ -82,7 +86,6 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
   const page = await getPage(slug);
 
   if (!page) {
@@ -90,34 +93,34 @@ export default async function Page({
   }
 
   return (
-    <main className="min-h-screen px-4 py-10 sm:px-6 lg:px-8">
-      <article className="glass mx-auto max-w-5xl rounded-3xl p-6 sm:p-8 lg:p-10">
-        <header>
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-              {page.title}
-            </h1>
+   <article className="min-h-[650px] rounded-3xl border border-slate-800 bg-slate-900/60 p-6 sm:p-10 lg:p-12 backdrop-blur-xl shadow-2xl">
+      {/* Page Header */}
+      <header className="border-b border-slate-800/80 pb-6 mb-8">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+            {page.title}
+          </h1>
 
-            {page.visibility === "registered" && (
-              <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
-                Registered Only
-              </span>
-            )}
-          </div>
+          {page.visibility === "registered" && (
+            <span className="rounded-full border border-cyan-500/30 bg-cyan-950/50 px-3 py-0.5 text-xs font-semibold text-cyan-300">
+              Registered Only
+            </span>
+          )}
+        </div>
 
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-500">
-            <span>Created {formatDate(page.createdAt)}</span>
-            <span>Updated {formatDate(page.updatedAt)}</span>
-          </div>
-        </header>
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs sm:text-sm text-slate-400">
+          <span>Published: <strong className="text-slate-300 font-medium">{formatDate(page.createdAt)}</strong></span>
+          <span>Last Updated: <strong className="text-slate-300 font-medium">{formatDate(page.updatedAt)}</strong></span>
+        </div>
+      </header>
 
-        <div
-          className={`${styles.typographyContainer} mt-8`}
-          dangerouslySetInnerHTML={{
-            __html: page.content,
-          }}
-        />
-      </article>
-    </main>
+      {/* Dynamic Body Content */}
+      <div
+        className={styles.typographyContainer}
+        dangerouslySetInnerHTML={{
+          __html: page.content,
+        }}
+      />
+    </article>
   );
 }

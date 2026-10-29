@@ -18,7 +18,7 @@ return (
    {/* Wrap children in a fluid, centered container so it never hugs the extreme left */}
    <div className="flex min-h-screen flex-col"> 
     <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
-       <div className="mx-auto max-w-6xl w-full"> 
+       <div className="mx-auto max-w-7xl w-full"> 
         {children} 
         </div> 
         </main> 

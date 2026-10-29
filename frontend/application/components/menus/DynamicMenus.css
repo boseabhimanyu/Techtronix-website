@@ -441,6 +441,5 @@
 .website-content {
   flex: 1;
   width: 100%;
-  max-width: 1200px; /* Or your preferred max layout width */
   margin: 0 auto;
 }
