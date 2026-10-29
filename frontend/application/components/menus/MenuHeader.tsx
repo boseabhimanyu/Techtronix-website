@@ -1,5 +1,7 @@
 "use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import MenuLink from "./MenuLink";
 import type { Menu, MenuItem } from "./menu-types";
@@ -20,10 +22,10 @@ function HeaderItems({ items }: { items: MenuItem[] }) {
               <MenuLink item={item} />
               {children.length > 0 && (
                 <>
-                 
-                  <div className="header-dropdown">
-                    <HeaderItems items={children} />
-                  </div>
+                
+                <div className="header-dropdown">
+                  <HeaderItems items={children} />
+                </div>
                 </>
               )}
             </li>
@@ -38,24 +40,57 @@ export default function MenuHeader({ menu }: { menu: Menu }) {
 
   return (
     <header className="glass-header">
-      <Link href="/" className="brand">
-        Go Mongo NextJs
-      </Link>
+      {/* ================= TIER 1: CTA (LEFT) | LOGO (CENTER) | CTA (RIGHT) ================= */}
+      <div className="header-top-bar">
+        {/* Left CTA: Phone Dispatch / Status */}
+        <div className="header-cta-left">
+          <a href="tel:+18005550199" className="header-cta-call">
+            <span className="live-indicator" />
+            <span className="cta-call-text">
+              <span className="cta-sub">Emergency IT Dispatch</span>
+              <span className="cta-main">(800) 555-0199</span>
+            </span>
+          </a>
+        </div>
 
-      <button
-        className="mobile-toggle"
-        aria-label="Toggle menu"
-        aria-expanded={open}
-        onClick={() => setOpen(!open)}
-      >
-        ☰
-      </button>
+        {/* Center: Square Logo with dedicated height */}
+        <div className="header-logo-center">
+          <Link href="/" className="brand-logo-wrapper" aria-label="Techtronix Home">
+            <Image
+              src="/logo.png"
+              alt="Techtronix Logo"
+              width={76}
+              height={76}
+              priority
+              className="brand-logo-img"
+            />
+          </Link>
+        </div>
 
+        {/* Right CTA: Booking / Action Button + Mobile Toggle */}
+        <div className="header-cta-right">
+          <Link href="/#contact" className="header-book-btn">
+            Book Repair
+          </Link>
+
+          {/* Mobile hamburger toggle */}
+          <button
+            className="mobile-toggle"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            onClick={() => setOpen(!open)}
+          >
+            {open ? "✕" : "☰"}
+          </button>
+        </div>
+      </div>
+
+      {/* ================= TIER 2: CENTERED DYNAMIC NAV ITEMS ================= */}
       <nav
-        aria-label={menu.name}
+        aria-label={menu?.name || "Main Navigation"}
         className={`top-nav ${open ? "open" : ""}`}
       >
-        <HeaderItems items={menu.items} />
+        <HeaderItems items={menu?.items ?? []} />
       </nav>
     </header>
   );

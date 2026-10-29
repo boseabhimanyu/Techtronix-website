@@ -108,10 +108,10 @@ export default async function Page({
           )}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs sm:text-sm text-slate-400">
+        {/* <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs sm:text-sm text-slate-400">
           <span>Published: <strong className="text-slate-300 font-medium">{formatDate(page.createdAt)}</strong></span>
           <span>Last Updated: <strong className="text-slate-300 font-medium">{formatDate(page.updatedAt)}</strong></span>
-        </div>
+        </div> */}
       </header>
 
       {/* Dynamic Body Content */}
