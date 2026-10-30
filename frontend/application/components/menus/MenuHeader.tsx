@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import MenuLink from "./MenuLink";
 import type { Menu, MenuItem } from "./menu-types";
+import { SITE_CONFIG } from "@/app/(website)/config/site";
 
 function HeaderItems({ items }: { items: MenuItem[] }) {
   return (
@@ -44,11 +45,11 @@ export default function MenuHeader({ menu }: { menu: Menu }) {
       <div className="header-top-bar">
         {/* Left CTA: Phone Dispatch / Status */}
         <div className="header-cta-left">
-          <a href="tel:+18005550199" className="header-cta-call">
+          <a href={`tel:${SITE_CONFIG.contact.phoneRaw}`} className="header-cta-call">
             <span className="live-indicator" />
             <span className="cta-call-text">
-              <span className="cta-sub">Emergency IT Dispatch</span>
-              <span className="cta-main">(800) 555-0199</span>
+              <span className="cta-sub">Reach Us at </span>
+              <span className="cta-main">{process.env.NEXT_PUBLIC_CONTACT_PHONE}</span>
             </span>
           </a>
         </div>
