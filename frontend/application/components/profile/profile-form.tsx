@@ -237,288 +237,246 @@ export default function ProfileForm({
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="glass rounded-3xl p-4 sm:p-5 lg:p-6"
-      >
-        {/* Profile Picture */}
-
-        <section className="mb-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-white/80 bg-white/60 shadow-[0_8px_24px_rgba(31,38,135,0.08)]">
-              {profilePic ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowProfileImage(true)
-                  }
-                  className="block h-full w-full cursor-zoom-in"
-                  aria-label="View profile picture"
-                >
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace(
-                      "/api/v1",
-                      "",
-                    )}/${profilePic}`}
-                    alt={`${firstName} ${lastName}`}
-                    className="h-full w-full object-cover transition-transform duration-200 hover:scale-105"
-                  />
-                </button>
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl font-semibold text-zinc-500">
-                  {firstName.charAt(0)}
-                  {lastName.charAt(0)}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <h2 className="text-base font-semibold">
-                Profile picture
-              </h2>
-
-              <p className="mt-1 text-sm text-zinc-600">
-                Upload a new profile picture.
-              </p>
-
-              <label
-                htmlFor="profile-picture"
-                className={`mt-3 inline-flex cursor-pointer items-center rounded-xl border border-zinc-300/70 bg-zinc-200/80 px-4 py-2.5 text-sm font-medium text-zinc-900 shadow-sm transition-colors hover:bg-zinc-300/80 ${
-                  profileImageLoading
-                    ? "pointer-events-none opacity-60"
-                    : ""
-                }`}
-              >
-                {profileImageLoading
-                  ? "Uploading..."
-                  : "Change photo"}
-              </label>
-
-              <input
-                id="profile-picture"
-                type="file"
-                accept="image/*"
-                onChange={handleProfileImageUpload}
-                disabled={profileImageLoading}
-                className="hidden"
-              />
-            </div>
-          </div>
-        </section>
-
-        <div className="mb-6 h-px bg-white/50" />
-
-        {/* Personal Information */}
-
-        <section>
-          <div className="mb-5">
-            <h2 className="text-base font-semibold">
-              Personal information
-            </h2>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <ProfileField
-              id="firstName"
-              label="First name"
-              value={firstName}
-              autoComplete="given-name"
-              onChange={(event) =>
-                setFirstName(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="lastName"
-              label="Last name"
-              value={lastName}
-              autoComplete="family-name"
-              onChange={(event) =>
-                setLastName(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="username"
-              label="Username"
-              value={username}
-              autoComplete="username"
-              onChange={(event) =>
-                setUsername(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="phone"
-              label="Phone"
-              type="tel"
-              value={phone}
-              autoComplete="tel"
-              inputMode="tel"
-              onChange={(event) =>
-                setPhone(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="email"
-              label="Email"
-              type="email"
-              value={email}
-              autoComplete="email"
-              inputMode="email"
-              onChange={(event) =>
-                setEmail(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="altEmail"
-              label="Alternative email"
-              type="email"
-              value={altEmail}
-              autoComplete="email"
-              inputMode="email"
-              onChange={(event) =>
-                setAltEmail(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="dateOfBirth"
-              label="Date of birth"
-              type="date"
-              value={dateOfBirth}
-              onChange={(event) =>
-                setDateOfBirth(event.target.value)
-              }
-            />
-          </div>
-        </section>
-
-        {/* Divider */}
-
-        <div className="my-6 h-px bg-white/50" />
-
-        {/* Address */}
-
-        <section>
-          <div className="mb-5">
-            <h2 className="text-base font-semibold">
-              Address
-            </h2>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <ProfileField
-                id="addressLine1"
-                label="Address line 1"
-                value={addressLine1}
-                autoComplete="address-line1"
-                onChange={(event) =>
-                  setAddressLine1(event.target.value)
-                }
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <ProfileField
-                id="addressLine2"
-                label="Address line 2"
-                value={addressLine2}
-                autoComplete="address-line2"
-                onChange={(event) =>
-                  setAddressLine2(event.target.value)
-                }
-              />
-            </div>
-
-            <ProfileField
-              id="city"
-              label="City"
-              value={city}
-              autoComplete="address-level2"
-              onChange={(event) =>
-                setCity(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="state"
-              label="State"
-              value={state}
-              autoComplete="address-level1"
-              onChange={(event) =>
-                setState(event.target.value)
-              }
-            />
-
-            <ProfileField
-              id="pinCode"
-              label="PIN code"
-              value={pinCode}
-              autoComplete="postal-code"
-              inputMode="numeric"
-              onChange={(event) =>
-                setPinCode(event.target.value)
-              }
-            />
-          </div>
-        </section>
-
-        {/* Actions */}
-
-        <div className="mt-6 flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
-            className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white shadow-lg shadow-black/10 transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading
-              ? "Saving..."
-              : "Save changes"}
-          </button>
-        </div>
-      </form>
-
-      {/* Profile image preview */}
-
-      {showProfileImage && profilePic && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
-          <button
-            type="button"
-            aria-label="Close profile picture"
-            onClick={() =>
-              setShowProfileImage(false)
-            }
-            className="absolute inset-0 cursor-default"
-          />
-
-          <div className="relative max-h-[90vh] max-w-[90vw] rounded-3xl border border-white/80 bg-white/40 p-3 shadow-[0_24px_70px_rgba(31,38,135,0.22)] backdrop-blur-2xl">
+  <form
+    onSubmit={handleSubmit}
+    className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-2xl backdrop-blur-xl sm:p-5 lg:p-6"
+  >
+    {/* Profile Picture */}
+    <section className="mb-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-slate-700 bg-slate-800/80 shadow-lg shadow-black/40">
+          {profilePic ? (
             <button
               type="button"
-              onClick={() =>
-                setShowProfileImage(false)
-              }
-              aria-label="Close"
-              className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/70 text-lg text-zinc-700 shadow-sm backdrop-blur-xl transition hover:bg-white"
+              onClick={() => setShowProfileImage(true)}
+              className="block h-full w-full cursor-zoom-in"
+              aria-label="View profile picture"
             >
-              ×
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_URL?.replace(
+                  "/api/v1",
+                  "",
+                )}/${profilePic}`}
+                alt={`${firstName} ${lastName}`}
+                className="h-full w-full object-cover transition-transform duration-200 hover:scale-105"
+              />
             </button>
-
-            <img
-              src={`${process.env.NEXT_PUBLIC_API_URL?.replace(
-                "/api/v1",
-                "",
-              )}/${profilePic}`}
-              alt={`${firstName} ${lastName}`}
-              className="max-h-[82vh] max-w-[85vw] rounded-2xl object-contain"
-            />
-          </div>
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-cyan-400">
+              {firstName.charAt(0)}
+              {lastName.charAt(0)}
+            </div>
+          )}
         </div>
-      )}
-    </>
+
+        <div>
+          <h2 className="text-base font-bold tracking-tight text-white">
+            Profile picture
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-400">
+            Upload a new profile picture.
+          </p>
+
+          <label
+            htmlFor="profile-picture"
+            className={`mt-3 inline-flex cursor-pointer items-center rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2 text-sm font-semibold text-slate-200 shadow-sm transition hover:border-slate-600 hover:bg-slate-700 hover:text-white active:scale-[0.98] ${
+              profileImageLoading ? "pointer-events-none opacity-60" : ""
+            }`}
+          >
+            {profileImageLoading ? "Uploading..." : "Change photo"}
+          </label>
+
+          <input
+            id="profile-picture"
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageUpload}
+            disabled={profileImageLoading}
+            className="hidden"
+          />
+        </div>
+      </div>
+    </section>
+
+    <div className="mb-6 h-px bg-slate-800" />
+
+    {/* Personal Information */}
+    <section>
+      <div className="mb-5">
+        <h2 className="text-base font-bold tracking-tight text-white">
+          Personal information
+        </h2>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <ProfileField
+          id="firstName"
+          label="First name"
+          value={firstName}
+          autoComplete="given-name"
+          onChange={(event) => setFirstName(event.target.value)}
+        />
+
+        <ProfileField
+          id="lastName"
+          label="Last name"
+          value={lastName}
+          autoComplete="family-name"
+          onChange={(event) => setLastName(event.target.value)}
+        />
+
+        <ProfileField
+          id="username"
+          label="Username"
+          value={username}
+          autoComplete="username"
+          onChange={(event) => setUsername(event.target.value)}
+        />
+
+        <ProfileField
+          id="phone"
+          label="Phone"
+          type="tel"
+          value={phone}
+          autoComplete="tel"
+          inputMode="tel"
+          onChange={(event) => setPhone(event.target.value)}
+        />
+
+        <ProfileField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          autoComplete="email"
+          inputMode="email"
+          onChange={(event) => setEmail(event.target.value)}
+        />
+
+        <ProfileField
+          id="altEmail"
+          label="Alternative email"
+          type="email"
+          value={altEmail}
+          autoComplete="email"
+          inputMode="email"
+          onChange={(event) => setAltEmail(event.target.value)}
+        />
+
+        <ProfileField
+          id="dateOfBirth"
+          label="Date of birth"
+          type="date"
+          value={dateOfBirth}
+          onChange={(event) => setDateOfBirth(event.target.value)}
+        />
+      </div>
+    </section>
+
+    {/* Divider */}
+    <div className="my-6 h-px bg-slate-800" />
+
+    {/* Address */}
+    <section>
+      <div className="mb-5">
+        <h2 className="text-base font-bold tracking-tight text-white">
+          Address
+        </h2>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <ProfileField
+            id="addressLine1"
+            label="Address line 1"
+            value={addressLine1}
+            autoComplete="address-line1"
+            onChange={(event) => setAddressLine1(event.target.value)}
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <ProfileField
+            id="addressLine2"
+            label="Address line 2"
+            value={addressLine2}
+            autoComplete="address-line2"
+            onChange={(event) => setAddressLine2(event.target.value)}
+          />
+        </div>
+
+        <ProfileField
+          id="city"
+          label="City"
+          value={city}
+          autoComplete="address-level2"
+          onChange={(event) => setCity(event.target.value)}
+        />
+
+        <ProfileField
+          id="state"
+          label="State"
+          value={state}
+          autoComplete="address-level1"
+          onChange={(event) => setState(event.target.value)}
+        />
+
+        <ProfileField
+          id="pinCode"
+          label="PIN code"
+          value={pinCode}
+          autoComplete="postal-code"
+          inputMode="numeric"
+          onChange={(event) => setPinCode(event.target.value)}
+        />
+      </div>
+    </section>
+
+    {/* Actions */}
+    <div className="mt-6 flex justify-end">
+      <button
+        type="submit"
+        disabled={loading}
+        className="h-11 rounded-xl bg-cyan-500 px-5 text-sm font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition hover:bg-cyan-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {loading ? "Saving..." : "Save changes"}
+      </button>
+    </div>
+  </form>
+
+  {/* Profile image preview */}
+  {showProfileImage && profilePic && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+      <button
+        type="button"
+        aria-label="Close profile picture"
+        onClick={() => setShowProfileImage(false)}
+        className="absolute inset-0 cursor-default"
+      />
+
+      <div className="relative max-h-[90vh] max-w-[90vw] rounded-3xl border border-slate-800 bg-slate-900/95 p-3 shadow-2xl backdrop-blur-2xl">
+        <button
+          type="button"
+          onClick={() => setShowProfileImage(false)}
+          aria-label="Close"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/90 text-xl font-bold text-slate-300 shadow-md transition hover:bg-slate-700 hover:text-white"
+        >
+          ×
+        </button>
+
+        <img
+          src={`${process.env.NEXT_PUBLIC_API_URL?.replace(
+            "/api/v1",
+            "",
+          )}/${profilePic}`}
+          alt={`${firstName} ${lastName}`}
+          className="max-h-[82vh] max-w-[85vw] rounded-2xl object-contain"
+        />
+      </div>
+    </div>
+  )}
+</>
   );
 }
 
@@ -553,23 +511,23 @@ function ProfileField({
 }: ProfileFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label
-        htmlFor={id}
-        className="text-sm font-medium"
-      >
-        {label}
-      </label>
+  <label
+    htmlFor={id}
+    className="text-xs font-semibold uppercase tracking-wider text-slate-400"
+  >
+    {label}
+  </label>
 
-      <input
-        id={id}
-        name={id}
-        type={type}
-        value={value}
-        autoComplete={autoComplete}
-        inputMode={inputMode}
-        onChange={onChange}
-        className="h-11 rounded-xl border border-white/80 bg-white/60 px-4 text-sm shadow-[0_4px_14px_rgba(31,38,135,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] outline-none backdrop-blur-xl transition placeholder:text-zinc-400 hover:bg-white/65 focus:border-white focus:bg-white/75 focus:shadow-[0_6px_18px_rgba(31,38,135,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] focus:ring-2 focus:ring-white/60"
-      />
-    </div>
+  <input
+    id={id}
+    name={id}
+    type={type}
+    value={value}
+    autoComplete={autoComplete}
+    inputMode={inputMode}
+    onChange={onChange}
+    className="h-11 rounded-xl border border-slate-700 bg-slate-800/80 px-4 text-sm text-white placeholder-slate-500 shadow-sm outline-none backdrop-blur-xl transition hover:border-slate-600 focus:border-cyan-500 focus:bg-slate-800 focus:ring-1 focus:ring-cyan-500/40"
+  />
+</div>
   );
 }
