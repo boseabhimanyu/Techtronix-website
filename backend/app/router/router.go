@@ -165,6 +165,13 @@ func NewRouter(
 	settingsHandler := handler.NewSettingsHandler(settingsService)
 
 	// ------------------------------------------------------------------
+	// Enquiries
+	// ------------------------------------------------------------------
+	enquiryRepository := mongorepo.NewEnquiryRepository(database)
+	enquiryService := services.NewEnquiryService(enquiryRepository)
+	enquiryHandler := handler.NewEnquiryHandler(enquiryService)
+
+	// ------------------------------------------------------------------
 	// Health / readiness
 	// ------------------------------------------------------------------
 
@@ -382,6 +389,29 @@ func NewRouter(
 	menus.PATCH("/:id/items/:itemId", menuHandler.UpdateItem)
 	menus.DELETE("/:id/items/:itemId", menuHandler.DeleteItem)
 	menus.PATCH("/:id/items/:itemId/order", menuHandler.MoveItem)
+
+	// ------------------------------------------------------------------
+	// Enquiries (Public Submission + Admin Management)
+	// ------------------------------------------------------------------
+
+	// Rate limiter: Max 5 enquiries per minute per IP to mitigate spam
+	enquiryLimiter := middleware.NewRateLimiter(5, time.Minute)
+
+	// Public: Customer form submission
+	api.POST(
+		"/enquiries",
+		enquiryLimiter.Middleware(middleware.RateLimitKeyByIP),
+		enquiryHandler.Submit,
+	)
+
+	// Admin: Enquiries management
+	enquiries := admin.Group("/enquiries")
+	{
+		enquiries.GET("", enquiryHandler.List)
+		enquiries.GET("/:id", enquiryHandler.GetByID)
+		enquiries.PATCH("", enquiryHandler.UpdateStatus)
+		enquiries.DELETE("", enquiryHandler.DeleteMany)
+	}
 
 	return r
 }
