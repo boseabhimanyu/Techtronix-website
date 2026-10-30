@@ -19,6 +19,14 @@ const allowedTags = [
   "pre",
   "span", 
   "img",
+  // Table elements matching backend bluemonday whitelist
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  "th",
+  "td",
 ];
 
 const allowedAttributes = [
@@ -30,7 +38,11 @@ const allowedAttributes = [
   "width",
   "height",
   "class", 
-  "style", 
+  "style",
+  // Table-specific attributes
+  "colspan",
+  "rowspan",
+  "scope",
 ];
 
 export function sanitizeHtml(html: string) {
@@ -44,9 +56,6 @@ export function sanitizeHtml(html: string) {
 
     ALLOWED_URI_REGEXP:
       /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i,
-    
-    // ALLOWED_URI_REGEXP:
-    //   /^(?:https:|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i, //Don't allow Http. Only Https 
 
     FORBID_TAGS: [
       "script",

@@ -32,6 +32,7 @@ export default function PageEditor({
             "autolink",
             "visualblocks",
             "wordcount",
+            "table", // 1. Added table plugin
             "code", // Will now correctly load from your public folder setup
           ],
           toolbar:
@@ -41,8 +42,9 @@ export default function PageEditor({
             "alignleft aligncenter alignright alignjustify | " +
             "bullist numlist | " +
             "blockquote | " +
+            "table | " + // 2. Added table controls to toolbar
             "image | code", // Added code to toolbar so you can actually click it!
-          
+           
           // ==========================================
           // TINYMCE SECURITY/FILTERING RULES
           // ==========================================
@@ -50,7 +52,13 @@ export default function PageEditor({
             'p[class|style|align],br,' +
             'h1[class|style|align],h2[class|style|align],h3[class|style|align],' +
             'strong,em,s,span[class|style|color],ul,ol,li,blockquote,' +
-            'hr,a[href|target|rel],img[src|alt|width|height|style|class]',
+            'hr,a[href|target|rel],img[src|alt|width|height|style|class],' +
+            // 3. Added table tags and attributes matching bluemonday and DOMPurify
+            'table[class|style],' +
+            'thead,tbody,tfoot,' +
+            'tr[class|style],' +
+            'th[class|style|colspan|rowspan|scope],' +
+            'td[class|style|colspan|rowspan]',
           
           invalid_elements: 'script,iframe,object,embed,form,input,button,textarea,select,svg,math',
 
@@ -71,6 +79,20 @@ export default function PageEditor({
               border-radius: 1rem;
               margin: 1rem 0;
               object-fit: contain;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 1rem 0;
+            }
+            th, td {
+              border: 1px solid #e4e4e7;
+              padding: 8px 12px;
+              text-align: left;
+            }
+            th {
+              background-color: #f4f4f5;
+              font-weight: 600;
             }
           `,
           image_protocols: ["https"], // Strict https matching your backend policy
