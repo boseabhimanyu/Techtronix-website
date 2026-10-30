@@ -392,223 +392,219 @@ export default function MenuItemForm({
       form.groupDestination === "url");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-zinc-200 bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
-          <div>
-            <h2 className="text-lg font-semibold text-zinc-900">
-              {editing ? "Edit Menu Item" : "Add Menu Item"}
-            </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+  <div className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-2xl">
+    {/* Modal Header */}
+    <div className="flex items-center justify-between border-b border-slate-800 px-6 py-5">
+      <div>
+        <h2 className="text-lg font-bold tracking-tight text-white">
+          {editing ? "Edit Menu Item" : "Add Menu Item"}
+        </h2>
 
-            <p className="mt-1 text-xs text-zinc-500">
-              Add or update a group, page, or external URL.
-            </p>
-          </div>
+        <p className="mt-1 text-xs text-slate-400">
+          Add or update a group, page, or external URL.
+        </p>
+      </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-2 text-zinc-500 hover:bg-zinc-100"
-            aria-label="Close form"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+      <button
+        type="button"
+        onClick={onClose}
+        className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+        aria-label="Close form"
+      >
+        <X className="h-5 w-5" />
+      </button>
+    </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-5">
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-              Label
-            </label>
+    {/* Form Body */}
+    <form onSubmit={handleSubmit} className="space-y-5 p-6">
+      {/* Label Field */}
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Label
+        </label>
 
-            <input
-              value={form.label}
-              onChange={(event) =>
-                update("label", event.target.value)
-              }
-              required
-              className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              placeholder="About Us"
-            />
-          </div>
+        <input
+          value={form.label}
+          onChange={(event) => update("label", event.target.value)}
+          required
+          className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-500 focus:bg-slate-800"
+          placeholder="About Us"
+        />
+      </div>
 
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-              Type
-            </label>
+      {/* Type Selector */}
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Type
+        </label>
 
-            <select
-              value={form.type}
-              onChange={(event) =>
-                handleTypeChange(
-                  event.target.value as MenuItemType,
-                )
-              }
-              className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-            >
-              <option value="group">Group</option>
-              <option value="page">Page</option>
-              <option value="url">URL</option>
-            </select>
-          </div>
+        <select
+          value={form.type}
+          onChange={(event) =>
+            handleTypeChange(event.target.value as MenuItemType)
+          }
+          className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-500"
+        >
+          <option value="group" className="bg-slate-900 text-white">Group</option>
+          <option value="page" className="bg-slate-900 text-white">Page</option>
+          <option value="url" className="bg-slate-900 text-white">URL</option>
+        </select>
+      </div>
 
-          {form.type === "group" && (
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-                Group destination
-              </label>
-
-              <select
-                value={form.groupDestination}
-                onChange={(event) =>
-                  handleGroupDestinationChange(
-                    event.target.value as GroupDestination,
-                  )
-                }
-                className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              >
-                <option value="none">No destination</option>
-                <option value="page">Link to a page</option>
-                <option value="url">Link to a URL</option>
-              </select>
-
-              <p className="mt-1.5 text-xs text-zinc-500">
-                Groups can have child items and an optional destination.
-              </p>
-            </div>
-          )}
-
-          {!editing && (
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-                Parent group
-              </label>
-
-              <select
-                value={form.parentId}
-                onChange={(event) =>
-                  update("parentId", event.target.value)
-                }
-                className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              >
-                <option value="">Top level</option>
-
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.label}
-                  </option>
-                ))}
-              </select>
-
-              <p className="mt-1.5 text-xs text-zinc-500">
-                Child items can belong to a group in this menu.
-              </p>
-            </div>
-          )}
-
-          {showPageSelector && (
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-                Page
-              </label>
-
-              <select
-                value={form.pageId}
-                onChange={(event) =>
-                  update("pageId", event.target.value)
-                }
-                disabled={loadingPages}
-                required
-                className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 disabled:bg-zinc-100"
-              >
-                <option value="">
-                  {loadingPages
-                    ? "Loading pages..."
-                    : "Select a page"}
-                </option>
-
-                {pages.map((page) => (
-                  <option key={page.id} value={page.id}>
-                    {page.title}
-                    {page.slug ? ` (${page.slug})` : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {showUrlInput && (
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-800">
-                URL or Path
-              </label>
-
-              <input
-                type="text" // Changed from "url" to "text" to support relative paths
-                value={form.url}
-                onChange={(event) =>
-                  update("url", event.target.value)
-                }
-                required
-                className="w-full rounded-xl border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                placeholder="https://example.com or /dashboard"
-              />
-            </div>
-          )}
-
-          <label className="flex items-center gap-3 rounded-xl border border-zinc-200 p-3">
-            <input
-              type="checkbox"
-              checked={form.displayStatus}
-              onChange={(event) =>
-                update("displayStatus", event.target.checked)
-              }
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-
-            <span>
-              <span className="block text-sm font-medium text-zinc-800">
-                Display item
-              </span>
-
-              <span className="block text-xs text-zinc-500">
-                Hidden items remain in the menu but are not displayed.
-              </span>
-            </span>
+      {/* Group Destination */}
+      {form.type === "group" && (
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Group destination
           </label>
 
-          {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              {error}
-            </div>
-          )}
+          <select
+            value={form.groupDestination}
+            onChange={(event) =>
+              handleGroupDestinationChange(
+                event.target.value as GroupDestination,
+              )
+            }
+            className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-500"
+          >
+            <option value="none" className="bg-slate-900 text-white">No destination</option>
+            <option value="page" className="bg-slate-900 text-white">Link to a page</option>
+            <option value="url" className="bg-slate-900 text-white">Link to a URL</option>
+          </select>
 
-          <div className="flex justify-end gap-3 border-t border-zinc-200 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
-            >
-              Cancel
-            </button>
+          <p className="mt-1.5 text-xs text-slate-400">
+            Groups can have child items and an optional destination.
+          </p>
+        </div>
+      )}
 
-            <button
-              type="submit"
-              disabled={
-                saving ||
-                (loadingPages && showPageSelector)
-              }
-              className="rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {saving
-                ? "Saving..."
-                : editing
-                  ? "Save Changes"
-                  : "Add Item"}
-            </button>
-          </div>
-        </form>
+      {/* Parent Group */}
+      {!editing && (
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Parent group
+          </label>
+
+          <select
+            value={form.parentId}
+            onChange={(event) => update("parentId", event.target.value)}
+            className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-500"
+          >
+            <option value="" className="bg-slate-900 text-white">Top level</option>
+
+            {groups.map((group) => (
+              <option key={group.id} value={group.id} className="bg-slate-900 text-white">
+                {group.label}
+              </option>
+            ))}
+          </select>
+
+          <p className="mt-1.5 text-xs text-slate-400">
+            Child items can belong to a group in this menu.
+          </p>
+        </div>
+      )}
+
+      {/* Page Selector */}
+      {showPageSelector && (
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Page
+          </label>
+
+          <select
+            value={form.pageId}
+            onChange={(event) => update("pageId", event.target.value)}
+            disabled={loadingPages}
+            required
+            className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-500 disabled:opacity-50"
+          >
+            <option value="" className="bg-slate-900 text-white">
+              {loadingPages ? "Loading pages..." : "Select a page"}
+            </option>
+
+            {pages.map((page) => (
+              <option key={page.id} value={page.id} className="bg-slate-900 text-white">
+                {page.title}
+                {page.slug ? ` (${page.slug})` : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* URL or Path */}
+      {showUrlInput && (
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            URL or Path
+          </label>
+
+          <input
+            type="text"
+            value={form.url}
+            onChange={(event) => update("url", event.target.value)}
+            required
+            className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-500 focus:bg-slate-800"
+            placeholder="https://example.com or /dashboard"
+          />
+        </div>
+      )}
+
+      {/* Display Status Checkbox */}
+      <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-3.5 transition hover:border-slate-700">
+        <input
+          type="checkbox"
+          checked={form.displayStatus}
+          onChange={(event) =>
+            update("displayStatus", event.target.checked)
+          }
+          className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-0 focus:ring-offset-0"
+        />
+
+        <span>
+          <span className="block text-sm font-semibold text-slate-200">
+            Display item
+          </span>
+
+          <span className="block text-xs text-slate-400">
+            Hidden items remain in the menu but are not displayed.
+          </span>
+        </span>
+      </label>
+
+      {/* Error Message */}
+      {error && (
+        <div className="rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm font-medium text-red-300">
+          {error}
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-3 border-t border-slate-800 pt-5">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-700 hover:text-white"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={saving || (loadingPages && showPageSelector)}
+          className="rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition hover:bg-cyan-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {saving
+            ? "Saving..."
+            : editing
+              ? "Save Changes"
+              : "Add Item"}
+        </button>
       </div>
-    </div>
+    </form>
+  </div>
+</div>
   );
 }

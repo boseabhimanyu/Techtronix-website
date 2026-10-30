@@ -169,195 +169,169 @@ export default function MenuList({
 
   return (
     <div className="space-y-4">
-      {locations.map((location) => {
-        const menu =
-         menus.find(
-          (item) =>
-             item.location === location,
-        );
+  {locations.map((location) => {
+    const menu = menus.find((item) => item.location === location);
+    const info = menuInfo[location];
+    const isEditing = menu ? editingId === menu.id : false;
+    const isBusy = menu ? busyId === menu.id : busyId === location;
 
-        const info = 
-        menuInfo[location];
-        const isEditing = menu
-          ? editingId === menu.id
-          : false;
-        const isBusy = menu
-          ? busyId === menu.id
-          : busyId === location;
+    return (
+      <div
+        key={location}
+        className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-xl transition hover:border-slate-700/80"
+      >
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="rounded-xl border border-slate-700/60 bg-slate-800/80 p-3 text-cyan-400">
+              <MenuIcon className="h-5 w-5" />
+            </div>
 
-        return (
-          <div
-            key={location}
-            className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm"
-          >
-            <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-              <div className="flex min-w-0 items-start gap-4">
-                <div className="rounded-xl bg-zinc-100 p-3">
-                  <MenuIcon className="h-5 w-5 text-zinc-700" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {/* Editable menu title */}
-                    {menu && isEditing ? (
-                      <form
-                        className="flex flex-wrap items-center gap-2"
-                        onSubmit={(event) => {
-                          event.preventDefault();
-                          void updateMenuName(menu);
-                        }}
-                      >
-                        <input
-                          type="text"
-                          value={editedName}
-                          onChange={(event) =>
-                            setEditedName(event.target.value)
-                          }
-                          maxLength={100}
-                          autoFocus
-                          required
-                          disabled={isBusy}
-                          aria-label="Menu title"
-                          placeholder="Enter menu title"
-                          className="w-full max-w-xs rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 disabled:opacity-50"
-                        />
-
-                        <button
-                          type="submit"
-                          disabled={isBusy || !editedName.trim()}
-                          aria-label="Save menu title"
-                          title="Save title"
-                          className="inline-flex items-center justify-center rounded-lg border border-emerald-200 p-2 text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          {isBusy ? (
-                            <span className="px-1 text-xs">
-                              Saving...
-                            </span>
-                          ) : (
-                            <Check className="h-4 w-4" />
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          disabled={isBusy}
-                          onClick={cancelEditing}
-                          aria-label="Cancel title editing"
-                          title="Cancel"
-                          className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-600 transition hover:bg-zinc-50 disabled:opacity-50"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </form>
-                    ) : (
-                      <>
-                        <h2 className="font-medium text-zinc-900">
-                          {menu?.name ??
-                           info.title}
-                        </h2>
-
-                        {menu && (
-                          <button
-                            type="button"
-                            disabled={isBusy || editingId !== null}
-                            onClick={() => startEditing(menu)}
-                            aria-label={`Edit ${menu.name} title`}
-                            title="Edit title"
-                            className="inline-flex items-center justify-center rounded-lg p-1.5 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                        )}
-                      </>
-                    )}
-
-                    {/* Menu location */}
-                    <span className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600">
-                      {location}
-                    </span>
-
-                    {/* Menu status */}
-                    {menu && (
-                      <span
-                        className={[
-                          "rounded-full px-2 py-1 text-xs",
-                          menu.status
-                            ? "bg-emerald-50 text-emerald-700"
-                            : "bg-zinc-100 text-zinc-500",
-                        ].join(" ")}
-                      >
-                        {menu.status
-                         ? "Active"
-                          : "Inactive"}
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="mt-1 text-sm text-zinc-500">
-                    {info.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Menu actions */}
-              {menu ? (
-                <div className="flex flex-wrap gap-2">
-                  <Link
-                    href={`/dashboard/menus/${menu.id}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-medium text-zinc-800 transition hover:bg-zinc-50"
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Editable menu title */}
+                {menu && isEditing ? (
+                  <form
+                    className="flex flex-wrap items-center gap-2"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void updateMenuName(menu);
+                    }}
                   >
-                    Manage
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
+                    <input
+                      type="text"
+                      value={editedName}
+                      onChange={(event) => setEditedName(event.target.value)}
+                      maxLength={100}
+                      autoFocus
+                      required
+                      disabled={isBusy}
+                      aria-label="Menu title"
+                      placeholder="Enter menu title"
+                      className="w-full max-w-xs rounded-xl border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-sm font-medium text-white outline-none transition focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/40 disabled:opacity-50"
+                    />
 
-                  <button
-                    type="button"
-                    disabled={
-                      isBusy || isEditing
-                    }
-                    onClick={() =>
-                       void toggleStatus(menu)}
+                    <button
+                      type="submit"
+                      disabled={isBusy || !editedName.trim()}
+                      aria-label="Save menu title"
+                      title="Save title"
+                      className="inline-flex items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-2 text-emerald-300 transition hover:bg-emerald-900/50 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {isBusy ? (
+                        <span className="px-1 text-xs">Saving...</span>
+                      ) : (
+                        <Check className="h-4 w-4" />
+                      )}
+                    </button>
 
+                    <button
+                      type="button"
+                      disabled={isBusy}
+                      onClick={cancelEditing}
+                      aria-label="Cancel title editing"
+                      title="Cancel"
+                      className="inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-800/80 p-2 text-slate-400 transition hover:bg-slate-700 hover:text-white disabled:opacity-50"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <h2 className="text-base font-bold tracking-tight text-white">
+                      {menu?.name ?? info.title}
+                    </h2>
+
+                    {menu && (
+                      <button
+                        type="button"
+                        disabled={isBusy || editingId !== null}
+                        onClick={() => startEditing(menu)}
+                        aria-label={`Edit ${menu.name} title`}
+                        title="Edit title"
+                        className="inline-flex items-center justify-center rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                    )}
+                  </>
+                )}
+
+                {/* Menu location badge */}
+                <span className="rounded-full border border-slate-700/80 bg-slate-800/80 px-2.5 py-0.5 font-mono text-xs font-semibold text-slate-300">
+                  {location}
+                </span>
+
+                {/* Menu status badge */}
+                {menu && (
+                  <span
                     className={[
-                      "inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50",
+                      "rounded-full border px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm",
                       menu.status
-                        ? "border-amber-300 text-amber-700 hover:bg-amber-50"
-                        : "border-emerald-300 text-emerald-700 hover:bg-emerald-50",
+                        ? "border-emerald-500/30 bg-emerald-950/50 text-emerald-300"
+                        : "border-slate-700 bg-slate-800/80 text-slate-400",
                     ].join(" ")}
                   >
-                    <Power className="h-4 w-4" />
+                    {menu.status ? "Active" : "Inactive"}
+                  </span>
+                )}
+              </div>
 
-                    {menu.status
-                     ? "Deactivate"
-                      : "Activate"}
-                  </button>
-
-                  <button
-                    type="button"
-                    disabled={isBusy || isEditing}
-                    onClick={() => 
-                      onDelete?.(menu)} // Triggers the parent modal handler
-                      
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Delete
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  disabled={isBusy}
-                  onClick={() => void initializeMenu(location)}
-                  className="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isBusy ? "Initializing..." : "Initialize Menu"}
-                </button>
-              )}
+              <p className="mt-1 text-sm text-slate-400">
+                {info.description}
+              </p>
             </div>
           </div>
-        );
-      })}
-    </div>
+
+          {/* Menu actions */}
+          {menu ? (
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/dashboard/menus/${menu.id}`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-slate-600 hover:bg-slate-700 hover:text-white active:scale-[0.98]"
+              >
+                Manage
+                <ChevronRight className="h-4 w-4 text-cyan-400" />
+              </Link>
+
+              <button
+                type="button"
+                disabled={isBusy || isEditing}
+                onClick={() => void toggleStatus(menu)}
+                className={[
+                  "inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50",
+                  menu.status
+                    ? "border-amber-500/30 bg-amber-950/40 text-amber-300 hover:border-amber-500/50 hover:bg-amber-900/50 hover:text-amber-100"
+                    : "border-emerald-500/30 bg-emerald-950/40 text-emerald-300 hover:border-emerald-500/50 hover:bg-emerald-900/50 hover:text-emerald-100",
+                ].join(" ")}
+              >
+                <Power className="h-4 w-4" />
+                {menu.status ? "Deactivate" : "Activate"}
+              </button>
+
+              <button
+                type="button"
+                disabled={isBusy || isEditing}
+                onClick={() => onDelete?.(menu)}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:border-red-500/50 hover:bg-red-900/50 hover:text-red-100 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              disabled={isBusy}
+              onClick={() => void initializeMenu(location)}
+              className="inline-flex items-center justify-center rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition hover:bg-cyan-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isBusy ? "Initializing..." : "Initialize Menu"}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  })}
+</div>
   );
 }

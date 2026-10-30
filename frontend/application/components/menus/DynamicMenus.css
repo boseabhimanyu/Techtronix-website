@@ -719,6 +719,16 @@
   z-index: 120;
 }
 
+.header-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: transparent;
+}
+
 .top-nav .has-children:hover > .header-dropdown,
 .top-nav .has-children:focus-within > .header-dropdown {
   display: block;
