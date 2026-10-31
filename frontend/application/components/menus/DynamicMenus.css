@@ -186,9 +186,17 @@
 }
 
 .footer-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Pins first item left, last item right, middle items equidistant */
+  align-items: flex-start;
   gap: 28px;
+  width: 100%;
+}
+
+.footer-group {
+  flex: 0 1 auto; /* Sizes columns to their natural content */
+  min-width: 160px;
 }
 
 .footer-group h3 {
@@ -304,8 +312,9 @@
   }
 
   .footer-columns {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px 14px;
+    gap: 24px 16px;
   }
 
   .footer-bottom {
