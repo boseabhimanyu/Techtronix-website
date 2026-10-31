@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import api from "@/lib/api";
 import axios from "axios";
-import { getCurrentUser } from "@/lib/auth"; // Import your auth helper
+import { getCurrentUser } from "@/lib/auth";
 import BackupCodesWarning from "@/components/dashboard/backup-codes-warning";
 
 async function getDashboardData() {
@@ -11,41 +11,52 @@ async function getDashboardData() {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
 
-    const [customersRes, pagesRes, menusRes, healthRes] = await Promise.allSettled([
-      api.get("/customers?limit=1", {
-        headers: { Cookie: cookieHeader },
-      }),
-      api.get("/admin/pages?limit=1", {
-        headers: { Cookie: cookieHeader },
-      }),
-      api.get("/admin/menus", {
-        headers: { Cookie: cookieHeader },
-      }),
-      axios.get(`${process.env.NEXT_PUBLIC_HEALTH_URL}/health`),
-    ]);
+    const [customersRes, pagesRes, menusRes, enquiriesRes, healthRes] =
+      await Promise.allSettled([
+        api.get("/customers?limit=1", {
+          headers: { Cookie: cookieHeader },
+        }),
+        api.get("/admin/pages?limit=1", {
+          headers: { Cookie: cookieHeader },
+        }),
+        api.get("/admin/menus", {
+          headers: { Cookie: cookieHeader },
+        }),
+        api.get("/admin/enquiries?limit=1", {
+          headers: { Cookie: cookieHeader },
+        }),
+        axios.get(`${process.env.NEXT_PUBLIC_HEALTH_URL}/health`),
+      ]);
 
-    const userCount = 
-      customersRes.status === "fulfilled" 
+    const userCount =
+      customersRes.status === "fulfilled"
         ? customersRes.value.data.pagination?.total ?? "—"
         : "Error";
 
-    const pageCount = 
-      pagesRes.status === "fulfilled" 
+    const pageCount =
+      pagesRes.status === "fulfilled"
         ? pagesRes.value.data.pagination?.total ?? "—"
         : "Error";
 
-    const menuCount = 
+    const menuCount =
       menusRes.status === "fulfilled" && Array.isArray(menusRes.value.data.menus)
         ? Math.min(menusRes.value.data.menus.length, 3)
         : "Error";
 
-    const systemStatus = 
+    const enquiryCount =
+      enquiriesRes.status === "fulfilled"
+        ? enquiriesRes.value.data.total ?? "—"
+        : "Error";
+
+    const systemStatus =
       healthRes.status === "fulfilled" ? "Online" : "Offline";
 
     return {
       users: typeof userCount === "number" ? userCount.toLocaleString() : userCount,
       pages: typeof pageCount === "number" ? pageCount.toLocaleString() : pageCount,
       menus: typeof menuCount === "number" ? menuCount.toLocaleString() : menuCount,
+      enquiries:
+        typeof enquiryCount === "number" ? enquiryCount.toLocaleString() : enquiryCount,
       systemStatus,
     };
   } catch (error) {
@@ -54,18 +65,16 @@ async function getDashboardData() {
       users: "Error",
       pages: "Error",
       menus: "Error",
+      enquiries: "Error",
       systemStatus: "Degraded",
     };
   }
 }
 
 export default async function DashboardPage() {
-  // 1. Fetch current user and check role
   const user = await getCurrentUser();
-  
   const isAdmin = user?.role?.toLowerCase() === "admin";
 
-  // 2. If not an admin, redirect immediately to the frontpage
   if (!isAdmin) {
     redirect("/");
   }
@@ -90,7 +99,15 @@ export default async function DashboardPage() {
         </div>
 
         {/* Dynamic Metric Cards */}
-        <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <DashboardCard
+            title="Enquiries"
+            value={stats.enquiries}
+            description="Hardware & repair requests"
+            
+            href="/dashboard/enquiry"
+          />
+
           <DashboardCard
             title="Users"
             value={stats.users}
@@ -118,30 +135,32 @@ export default async function DashboardPage() {
 
         {/* Activity & Quick Actions */}
         <section className="mt-8 grid gap-6 lg:grid-cols-2">
-          {/* Recent activity */}
+          {/* Recent activity / primary shortcuts */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-base font-semibold text-slate-900">
-              Recent activity
+              Primary Resources
             </h2>
 
             <p className="mt-1 text-sm text-slate-500">
-              Quick links to recently managed resources.
+              Quick access to core business management areas.
             </p>
 
             <div className="mt-4 flex flex-col gap-2.5">
               <Link
+                href="/dashboard/enquiry"
+                className="rounded-lg bg-cyan-600 px-4 py-2.5 text-center text-sm font-medium text-white transition hover:bg-cyan-500 shadow-sm"
+              >
+                Manage Customer Enquiries
+              </Link>
+              <Link
                 href="/dashboard/pages"
-                className="rounded-lg bg-slate-900 px-4 py-2.5
-                  text-center text-sm font-medium text-white
-                  transition hover:bg-slate-700"
+                className="rounded-lg bg-slate-900 px-4 py-2.5 text-center text-sm font-medium text-white transition hover:bg-slate-700"
               >
                 Pages Management
               </Link>
               <Link
                 href="/dashboard/menus"
-                className="rounded-lg bg-slate-900 px-4 py-2.5
-                  text-center text-sm font-medium text-white
-                  transition hover:bg-slate-700"
+                className="rounded-lg bg-slate-900 px-4 py-2.5 text-center text-sm font-medium text-white transition hover:bg-slate-700"
               >
                 Navigation Menus
               </Link>
@@ -160,34 +179,32 @@ export default async function DashboardPage() {
 
             <div className="mt-4 grid grid-cols-2 gap-2.5">
               <Link
+                href="/dashboard/enquiry"
+               className="rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Enquiries
+              </Link>
+              <Link
                 href="/dashboard/customers"
-                className="rounded-lg border border-slate-200
-                  px-4 py-2.5 text-center text-sm font-medium text-slate-700
-                  transition hover:bg-slate-50"
+                className="rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Customers
               </Link>
               <Link
                 href="/dashboard/pages"
-                className="rounded-lg border border-slate-200
-                  px-4 py-2.5 text-center text-sm font-medium text-slate-700
-                  transition hover:bg-slate-50"
+                className="rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Pages
               </Link>
               <Link
                 href="/dashboard/menus"
-                className="rounded-lg border border-slate-200
-                  px-4 py-2.5 text-center text-sm font-medium text-slate-700
-                  transition hover:bg-slate-50"
+                className="rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Menus
               </Link>
               <Link
                 href="/dashboard/settings"
-                className="rounded-lg border border-slate-200
-                  px-4 py-2.5 text-center text-sm font-medium text-slate-700
-                  transition hover:bg-slate-50"
+                className="col-span-2 rounded-lg border border-slate-200 px-4 py-2.5 text-center text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Settings
               </Link>
@@ -203,26 +220,50 @@ type DashboardCardProps = {
   title: string;
   value: string;
   description: string;
+  highlight?: boolean;
+  href?: string;
 };
 
 function DashboardCard({
   title,
   value,
   description,
+  highlight,
+  href,
 }: DashboardCardProps) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-medium text-slate-500">
+  const content = (
+    <div
+      className={`rounded-2xl border p-5 shadow-sm transition ${
+        highlight
+          ? "border-cyan-200 bg-cyan-50/40 hover:bg-cyan-50/70"
+          : "border-slate-200 bg-white hover:border-slate-300"
+      }`}
+    >
+      <p
+        className={`text-sm font-medium ${
+          highlight ? "text-cyan-700" : "text-slate-500"
+        }`}
+      >
         {title}
       </p>
 
-      <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+      <p
+        className={`mt-3 text-3xl font-semibold tracking-tight ${
+          highlight ? "text-cyan-950" : "text-slate-900"
+        }`}
+      >
         {value}
       </p>
 
-      <p className="mt-1 text-xs text-slate-400">
+      <p
+        className={`mt-1 text-xs ${
+          highlight ? "text-cyan-600/80" : "text-slate-400"
+        }`}
+      >
         {description}
       </p>
     </div>
   );
+
+  return href ? <Link href={href}>{content}</Link> : content;
 }
