@@ -125,7 +125,7 @@ export default function ContactForm() {
             ✓ Enquiry Dispatched
           </div>
           <p className="text-sm text-slate-300 mt-2">
-            Thank you. Your request has been logged. We will reach out on your phone number shortly.
+            Thank you. Your request has been logged. We will reach out on you shortly.
           </p>
           
           <button
@@ -213,22 +213,7 @@ export default function ContactForm() {
             </div>
           </div>
 
-          {/* City/Area (Mapped to PinCode in backend) */}
-          <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              City/Area
-            </label>
-            <input
-              type="text"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleChange}
-              placeholder="e.g. Koramangala / 560034"
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all"
-            />
-          </div>
-
-          {/* Message */}
+                {/* Message */}
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
               Message <span className="text-cyan-400">*</span>
@@ -249,6 +234,23 @@ export default function ContactForm() {
               <p className="text-red-400 text-xs mt-1.5 font-mono">{messageError}</p>
             )}
           </div>
+          
+          {/* City/Area (Mapped to PinCode in backend) */}
+          <div>
+            <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              City/Area
+            </label>
+            <input
+              type="text"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleChange}
+              placeholder="e.g. Koramangala / 560034"
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+            />
+          </div>
+
+          
 
           {/* Submit Button */}
           <button

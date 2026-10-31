@@ -70,8 +70,8 @@ export default function MenuHeader({ menu }: { menu: Menu }) {
 
         {/* Right CTA: Booking / Action Button + Mobile Toggle */}
         <div className="header-cta-right">
-          <Link href="/contact-us" className="header-book-btn">
-            Book Repair
+          <Link href="/contact" className="header-book-btn">
+            Contact
           </Link>
 
           {/* Mobile hamburger toggle */}
