@@ -57,4 +57,10 @@ var (
 	ErrTwoFactorAlreadyEnabled  = errors.New("two-factor authentication is already enabled")
 	ErrInvalidBackupCode        = errors.New("invalid backup code")
 	ErrTwoFactorResetNotAllowed = errors.New("two-factor reset is not allowed for this user")
+
+	//Enquiry
+	ErrEnquiryNotFound      = errors.New("enquiry not found")
+	ErrInvalidEnquiryID     = errors.New("invalid enquiry id")
+	ErrInvalidEnquiryStatus = errors.New("invalid enquiry status")
+	ErrEmptyEnquiryIDs      = errors.New("enquiry ids list cannot be empty")
 )

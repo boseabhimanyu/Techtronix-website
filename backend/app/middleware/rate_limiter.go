@@ -71,7 +71,7 @@ func (r *RateLimiter) Middleware(keyFunc func(*gin.Context) string) gin.HandlerF
 			)
 
 			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
-				"error": "too many requests",
+				"error": "Too many requests. Please try after sometime.",
 			})
 			return
 		}
