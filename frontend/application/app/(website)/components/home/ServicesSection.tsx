@@ -34,7 +34,7 @@ const SERVICES: ServiceCardProps[] = [
       "Cable management & airflow optimization"
     ],
     ctaText: "Book Service",
-    ctaHref: "/contact?service=hardware",
+    ctaHref: "/contact",
   },
   {
     icon: Cpu,
@@ -49,7 +49,7 @@ const SERVICES: ServiceCardProps[] = [
       "Drive health & speed benchmarking"
     ],
     ctaText: "Check Compatibility",
-    ctaHref: "/contact?service=upgrade",
+    ctaHref: "/contact",
   },
   {
     icon: Terminal,
@@ -64,7 +64,7 @@ const SERVICES: ServiceCardProps[] = [
       "Dual-boot configuration without partition errors"
     ],
     ctaText: "Request Setup",
-    ctaHref: "/contact?service=os-install",
+    ctaHref: "/contact",
   },
   {
     icon: Wifi,
@@ -79,7 +79,7 @@ const SERVICES: ServiceCardProps[] = [
       "Secure remote access (AnyDesk / TeamViewer)"
     ],
     ctaText: "Start Remote Session",
-    ctaHref: "/contact?service=remote",
+    ctaHref: "/contact",
   },
 ];
 

@@ -16,11 +16,11 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-    // Determine current pathname using headers to check route protection
+  // Determine current pathname using headers to check route protection
   const headersList = await headers();
   const pathname = headersList.get("x-invoke-path") || headersList.get("referer") || "";
 
-    // Define routes that require admin privileges
+  // Define routes that require admin privileges
   const adminOnlyRoutes = [
     "/dashboard/enquiry",
     "/dashboard/customers", 
@@ -37,13 +37,13 @@ export default async function DashboardLayout({
     redirect("/dashboard");
   }
 
-  const fullName =
-   `${user.firstName} ${user.lastName}`.trim();
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
 
   return (
     <div className="min-h-screen">
       <header className="glass-strong sticky top-4 z-40 mx-4 rounded-2xl sm:mx-6 lg:mx-8">
-        <div className="flex min-h-16 items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="relative flex min-h-16 items-center justify-between gap-4 px-4 sm:px-6">
+          {/* Left: Mobile Toggle & User Info */}
           <div className="flex items-center gap-3 min-w-0">
             {/* Native CSS dropdown toggle for mobile (< lg) */}
             <details className="relative lg:hidden">
@@ -146,12 +146,28 @@ export default async function DashboardLayout({
             </div>
           </div>
 
-          <LogoutButton />
+          {/* Center: Brand / Logo link to frontpage */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Link
+              href="/"
+              className="flex items-center gap-2 group transition-transform hover:scale-105"
+            >
+              <span className="w-2 h-2 rounded-full bg-cyan-400 group-hover:shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-shadow" />
+              <span className="text-base sm:text-lg font-bold tracking-tight font-mono text-slate-800 dark:text-slate-100 group-hover:text-cyan-500 transition-colors">
+                Techtronix
+              </span>
+            </Link>
+          </div>
+
+          {/* Right: Logout Action */}
+          <div className="flex items-center shrink-0">
+            <LogoutButton />
+          </div>
         </div>
       </header>
 
       <div className="flex min-h-[calc(100vh-2rem)] gap-4 p-4 sm:gap-6 sm:p-6 lg:gap-8 lg:p-8">
-        {/* Desktop Sidebar (unchanged, keeps desktop look) */}
+        {/* Desktop Sidebar */}
         <aside className="glass hidden w-60 shrink-0 rounded-2xl lg:block">
           <nav className="p-3">
             <div className="space-y-1">

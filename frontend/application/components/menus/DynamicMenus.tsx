@@ -16,11 +16,13 @@ type InitialMenus = {
 type DynamicMenusProps = {
   children: ReactNode;
   initialMenus: InitialMenus;
+  isAdmin?: boolean;
 };
 
 export default function DynamicMenus({
   children,
   initialMenus,
+  isAdmin = false,
 }: DynamicMenusProps) {
   const [top] = useState<Menu | null>(initialMenus.top);
   const [left] = useState<Menu | null>(initialMenus.left);
@@ -38,7 +40,7 @@ export default function DynamicMenus({
         </main>
       </div>
 
-      {bottom && <MenuFooter menu={bottom} />}
+      {bottom && <MenuFooter menu={bottom} isAdmin={isAdmin} />}
     </div>
   );
 }

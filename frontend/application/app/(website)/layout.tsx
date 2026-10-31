@@ -1,31 +1,38 @@
 import DynamicMenus from "@/components/menus/DynamicMenus"; 
 import { fetchMenus } from "@/components/menus/menu-api"; 
 import AuthFloatingWidget from "@/components/AuthFloatingWidget";
+import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function WebsiteLayout({
-   children, 
-  }: Readonly<{ 
-    children: React.ReactNode; 
-  }>) { 
-      const initialMenus = await fetchMenus();
+  children, 
+}: Readonly<{ 
+  children: React.ReactNode; 
+}>) { 
+  const [initialMenus, user] = await Promise.all([
+    fetchMenus(),
+    getCurrentUser(),
+  ]);
 
-return (
-   <DynamicMenus 
-   initialMenus={initialMenus}
-   > 
-   {/* Wrap children in a fluid, centered container so it never hugs the extreme left */}
-   <div className="flex min-h-screen flex-col"> 
-  <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
-    {/* Set to max-w-7xl */}
-    <div className="mx-auto max-w-7xl w-full"> 
-      {children} 
-    </div> 
-  </main> 
-</div>
+  const isAdmin = user?.role?.toLowerCase() === "admin";
 
-  <AuthFloatingWidget />
-</DynamicMenus>
-); 
+  return (
+    <DynamicMenus 
+      initialMenus={initialMenus}
+      isAdmin={isAdmin}
+    > 
+      {/* Wrap children in a fluid, centered container so it never hugs the extreme left */}
+      <div className="flex min-h-screen flex-col"> 
+        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          {/* Set to max-w-7xl */}
+          <div className="mx-auto max-w-7xl w-full"> 
+            {children} 
+          </div> 
+        </main> 
+      </div>
+
+      {/* <AuthFloatingWidget /> */}
+    </DynamicMenus>
+  ); 
 }

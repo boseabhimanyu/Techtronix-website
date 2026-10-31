@@ -1,7 +1,13 @@
+import Link from "next/link";
 import MenuLink from "./MenuLink";
-import type { Menu, MenuItem } from "./menu-types";
+import type { Menu } from "./menu-types";
 
-export default function MenuFooter({ menu }: { menu: Menu }) {
+interface MenuFooterProps {
+  menu: Menu;
+  isAdmin?: boolean;
+}
+
+export default function MenuFooter({ menu, isAdmin = false }: MenuFooterProps) {
   return (
     <footer className="glass-footer">
       <div className="footer-columns">
@@ -10,7 +16,9 @@ export default function MenuFooter({ menu }: { menu: Menu }) {
           .sort((a, b) => a.order - b.order)
           .map((item) => (
             <section key={item.id} className="footer-group">
-              <h3><MenuLink item={item} /></h3>
+              <h3>
+                <MenuLink item={item} />
+              </h3>
               <ul className="menu-list">
                 {(item.children ?? [])
                   .filter((child) => child.displayStatus)
@@ -27,7 +35,16 @@ export default function MenuFooter({ menu }: { menu: Menu }) {
 
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Techtronix</span>
-        <span>All rights reserved.</span>
+        {isAdmin ? (
+          <Link
+            href="/dashboard"
+            className="hover:text-cyan-400 transition-colors"
+          >
+            <span>All rights reserved.</span>
+          </Link>
+        ) : (
+          <span>All rights reserved.</span>
+        )}
       </div>
     </footer>
   );
